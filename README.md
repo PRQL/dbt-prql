@@ -1,6 +1,6 @@
 # dbt-prql
 
-dbt-prql allows writing PRQL in dbt models, magically compiling the PRQL to SQL
+dbt-prql allows writing PRQL in dbt models, magically compiling the PRQL to SQL,
 so dbt can work seamlessly.
 
 ## Examples
@@ -58,13 +58,12 @@ GROUP BY
 
 When dbt compiles models to SQL queries:
 
-- Any text in a dbt model between `{% prql %}` and `{% endprql %}` tags will be
+- Any text in a dbt model between `{% prql %}` and `{% endprql %}` tags is
   compiled from PRQL to SQL.
-- In an effort to support this use-case, the PRQL complier passes through any
-  text in a PRQL query that's surrounded by `{{...}}`  without modification,
-  which allows us to pass Jinja expressions through to dbt.
-- dbt will then compile the resulting model to SQL, like it has since the down
-  of the MDS.
+- The PRQL complier passes through any text in a PRQL query that's surrounded by
+  `{{...}}`  without modification, which allows us to pass Jinja expressions
+  through to dbt. (This was added to PRQL specifically for this use-case.)
+- dbt will then compile the resulting model to SQL.
 
 There's no config needed in the dbt project; the only action is to install
 `dbt-prql`.
@@ -77,21 +76,23 @@ pip install dbt-prql
 
 ## Current state
 
-Currently this in an early state. But it's enthusiastically supported — if there
-are any problems, please open an issue.
+Currently this is new, but fairly feature-complete. It's enthusiastically
+supported — if there are any problems, please open an issue.
 
-Note that we need to release a new `pyprql` version for this to pass jinja
-expressions through, which we'll do in the next couple of days.
+Note that we need to release a new `pyprql` version for this plugin to pass
+jinja expressions through, which we'll do in the next couple of days.
 
-## Is this magic?
+## How does it work?
 
-It's much worse.
+It's some dark magic, unfortunately.
 
-Unfortunately, it's not possible to add behavior to dbt beyond the database
-adapters (e.g. `dbt-bigquery`) or jinja-only plugins (e.g. `dbt-utils`). So this
-library hacks the python import system to monkeypatch dbt's jinja environment
-with an additional jinja extension, which avoids the need for any changes to
-dbt.
+dbt doesn't allow adding behavior beyond the database adapters (e.g.
+`dbt-bigquery`) or jinja-only plugins (e.g. `dbt-utils`). So this library hacks
+the python import system to monkeypatch dbt's jinja environment with an
+additional jinja extension, which avoids the need for any changes to dbt.
+
+This approach was discussed with the dbt team
+[here](https://github.com/prql/prql/issues/375) and [here](https://github.com/prql/prql/issues/13).
 
 Thanks to
 [mtkennerly/poetry-dynamic-versioning](https://github.com/mtkennerly/poetry-dynamic-versioning)
@@ -110,11 +111,14 @@ dbt-prql`.
 
 ## Roadmap
 
-Open to ideas; at the moment it's fairly feature-complete. If dbt allowed for
-external plugins, we'd enthusiastically move to that. We'd also love to have
-this work on `.prql` files without the `{% prql %}` tags; but with the current
-approach would require quite invasive monkeypatching.
+Open to ideas; at the moment it's fairly feature-complete. A couple to start:
 
-We may move this to <https://github.com/prql/PyPrql> or
+- If dbt allowed for external plugins, we'd enthusiastically move to that.
+- We'd love to have this work on `.prql` files without the `{% prql %}` tags;
+  but with the current approach would require quite invasive monkeypatching.
+- If we could add the dialect in automatically (i.e. `prql dialect:snowflake`),
+  that would save a line per model.
+
+We may move this code to <https://github.com/prql/PyPrql> or
 <https://github.com/prql/prql>. We'd prefer to keep it as its own package given
 the hackery above, but there's no need for it to be its own repo.
