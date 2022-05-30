@@ -51,18 +51,22 @@ GROUP BY
   name
 ```
 
-...and then dbt will compile the `source` and `ref`s to the full SQL query.
+...and then dbt will compile the `source` and `ref`s to a full SQL query.
 
 ## What it does
 
-While `dbt-prql` is installed, when dbt compiles models to SQL queries:
+When dbt compiles models to SQL queries:
 
 - Any text in a dbt model between `{% prql %}` and `{% endprql %}` tags will be
   compiled from PRQL to SQL.
 - In an effort to support this use-case, the PRQL complier passes through any
   text in a PRQL query that's surrounded by `{{...}}`  without modification,
   which allows us to pass Jinja expressions through to dbt.
-- dbt will then compile the resulting model to SQL, like it always does.
+- dbt will then compile the resulting model to SQL, like it has since the down
+  of the MDS.
+
+There's no config needed in the dbt project; the only action is to install
+`dbt-prql`.
 
 ## Installation
 
@@ -107,5 +111,9 @@ dbt-prql`.
 
 Open to ideas; at the moment it's fairly feature-complete. If dbt allowed for
 external plugins, we'd enthusiastically move to that. We'd also love to have
-this work on `.prql` files without the `{% prql %}` tags; with the current
+this work on `.prql` files without the `{% prql %}` tags; but with the current
 approach would require quite invasive monkeypatching.
+
+We may move this to <https://github.com/prql/PyPrql> or
+<https://github.com/prql/prql>. We'd prefer to keep it as its own package given
+the hackery above, but there's no need for it to be its own repo.
