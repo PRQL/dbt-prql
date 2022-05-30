@@ -59,8 +59,8 @@ GROUP BY
 
 dbt's use of macros has saved many of us many lines of code, and even saved some
 people some time. But imperatively programming text generation with code like
-`if not loop.last` is not our highest calling, and the necessary rather than
-beautiful side of dbt.
+`if not loop.last` is not our highest calling. It's the "necessary" part rather
+than beautiful part of dbt.
 
 Here's the canonical example of macros in the [dbt
 documentation](https://docs.getdbt.com/tutorial/learning-more/using-jinja):
@@ -78,7 +78,7 @@ from {{ ref('raw_payments') }}
 group by 1
 ```
 
-Here's that model as a PRQL model[^1], including the prql jinja tags.
+Here's that model using PRQL[^1], including the prql jinja tags.
 
 ```elm
 {% prql %}
@@ -99,6 +99,35 @@ As well the query being simpler in its final form, writing in PRQL also gives us
 live feedback around any errors, on every keystroke. Though there's much more to
 come, check out the current version on [PRQL
 Playground](https://prql-lang.org/playground/).
+
+[^1]: Note that when <https://github.com/prql/prql/issues/82> is implemented, we
+    can dispense with the s-string, and optionally dispense with the function.
+
+    ```elm
+    from {{ ref('raw_payments') }}
+    group order_id (
+      aggregate [
+        bank_transfer_amount = amount | filter payment_method == 'bank'        | sum,
+        credit_card_amount = amount   | filter payment_method == 'credit_card' | sum,
+        gift_amount = amount          | filter payment_method == 'gift_card'   | sum,
+      ]
+    )
+    ```
+
+    or
+
+    ```elm
+    func filter_amount method -> amount | filter payment_method == method | sum
+
+    from {{ ref('raw_payments') }}
+    group order_id (
+      aggregate [
+        bank_transfer_amount = filter_amount 'bank'
+        credit_card_amount   = filter_amount 'credit_card'
+        gift_amount          = filter_amount 'gift_card'
+      ]
+    )
+    ```
 
 ## What it does
 
@@ -136,14 +165,15 @@ It's some dark magic, unfortunately.
 dbt doesn't allow adding behavior beyond the database adapters (e.g.
 `dbt-bigquery`) or jinja-only plugins (e.g. `dbt-utils`). So this library hacks
 the python import system to monkeypatch dbt's jinja environment with an
-additional jinja extension, which avoids the need for any changes to dbt.
+additional jinja extension on python's startup[^2].
 
-This approach was discussed with the dbt team
-[here](https://github.com/prql/prql/issues/375) and [here](https://github.com/prql/prql/issues/13).
-
-Thanks to
+[^2]: Thanks to
 [mtkennerly/poetry-dynamic-versioning](https://github.com/mtkennerly/poetry-dynamic-versioning)
 for the technique.
+
+This approach was discussed with the dbt team
+[here](https://github.com/prql/prql/issues/375) and
+[here](https://github.com/prql/prql/issues/13).
 
 This isn't stable between dbt versions, since it relies on internal dbt APIs.
 The technique is also normatively bad — it runs a few lines of code every time
@@ -166,36 +196,9 @@ unconstrained in dbt functionality:
   but with the current approach would require quite invasive monkeypatching.
 - If we could add the dialect in automatically (i.e. `prql dialect:snowflake`),
   that would save a line per model.
+- If we could upstream this into dbt-core, that would be awesome. It may be on
+  PRQL to demonstrate its staying power before that, though.
 
-We may move this library to <https://github.com/prql/PyPrql> or
-<https://github.com/prql/prql>. We'd prefer to keep it as its own package given
-the hackery above, but there's no need for it to be its own repo.
-
-[^1]: Note that when <https://github.com/prql/prql/issues/82> is implemented, we
-    could dispense with the function, and definitely dispense with the s-string.
-
-    ```elm
-    from {{ ref('raw_payments') }}
-    group order_id (
-      aggregate [
-        bank_transfer_amount = amount | filter payment_method == 'bank'        | sum,
-        credit_card_amount = amount   | filter payment_method == 'credit_card' | sum,
-        gift_amount = amount          | filter payment_method == 'gift_card'   | sum,
-      ]
-    )
-    ```
-
-    or
-
-    ```elm
-    func filter_amount method -> amount | filter payment_method == method | sum
-
-    from {{ ref('raw_payments') }}
-    group order_id (
-      aggregate [
-        bank_transfer_amount = filter_amount 'bank'
-        credit_card_amount   = filter_amount 'credit_card'
-        gift_amount          = filter_amount 'gift_card'
-      ]
-    )
-    ```
+We may move this library to the <https://github.com/prql/PyPrql> or
+<https://github.com/prql/prql> repos. We'd prefer to keep it as its own package
+given the hackery above, but there's no need for it to be its own repo.
