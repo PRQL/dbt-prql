@@ -65,8 +65,8 @@ When dbt compiles models to SQL queries:
   through to dbt. (This was added to PRQL specifically for this use-case.)
 - dbt will then compile the resulting model to SQL.
 
-There's no config needed in the dbt project; the only action is to install
-`dbt-prql`.
+There's no config needed in the dbt project; this works automatically assuming
+`dbt-prql` is installed.
 
 ## Installation
 
