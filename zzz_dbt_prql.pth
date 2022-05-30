@@ -1,0 +1,1 @@
+import dbt_prql.patch as patch; patch.patch_dbt_environment()
