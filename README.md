@@ -111,7 +111,8 @@ dbt-prql`.
 
 ## Roadmap
 
-Open to ideas; at the moment it's fairly feature-complete. A couple to start:
+Open to ideas; at the moment it's fairly feature-complete. If we were
+unconstrained in dbt functionality:
 
 - If dbt allowed for external plugins, we'd enthusiastically move to that.
 - We'd love to have this work on `.prql` files without the `{% prql %}` tags;
