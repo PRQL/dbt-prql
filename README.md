@@ -57,12 +57,12 @@ GROUP BY
 
 ### Replacing macros
 
-dbt's use of macros has saved many engineers many lines of code, and even saved
-some people some time. But imperatively programming text generation with
-instructions like  `if not loop.last` is not our
-highest calling, and the necessary rather than beautiful side of dbt.
+dbt's use of macros has saved many of us many lines of code, and even saved some
+people some time. But imperatively programming text generation with code like
+`if not loop.last` is not our highest calling, and the necessary rather than
+beautiful side of dbt.
 
-This is the canonical example of macros in the [dbt
+Here's the canonical example of macros in the [dbt
 documentation](https://docs.getdbt.com/tutorial/learning-more/using-jinja):
 
 ```sql
@@ -78,11 +78,11 @@ from {{ ref('raw_payments') }}
 group by 1
 ```
 
-Here's that as a PRQL query[^1], surrounded by prql jinja tags. No need for `if not loop.last`!
+Here's that model as a PRQL model[^1], including the prql jinja tags.
 
 ```elm
 {% prql %}
-func filter_amount method -> s"sum(case when payment_method = {method} then amount end) as {method}_amount"
+func filter_amount method -> s"sum(case when payment_method = '{method}' then amount end) as {method}_amount"
 
 from {{ ref('raw_payments') }}
 group order_id (
@@ -94,6 +94,11 @@ group order_id (
 )
 {% endprql %}
 ```
+
+As well the query being simpler in its final form, writing in PRQL also gives us
+live feedback around any errors, on every keystroke. Though there's much more to
+come, check out the current version on [PRQL
+Playground](https://prql-lang.org/playground/).
 
 ## What it does
 
@@ -143,7 +148,7 @@ for the technique.
 This isn't stable between dbt versions, since it relies on internal dbt APIs.
 The technique is also normatively bad — it runs a few lines of code every time
 the python interpreter starts — whose errors could lead to very confusing bugs
-beyond the domain of the problem (though in the case of this code, it's small
+beyond the domain of the problem (though in the case of this library, it's small
 and well-constructed™).
 
 If there's ever any concern that the library might be causing a problem, just
@@ -162,7 +167,7 @@ unconstrained in dbt functionality:
 - If we could add the dialect in automatically (i.e. `prql dialect:snowflake`),
   that would save a line per model.
 
-We may move this code to <https://github.com/prql/PyPrql> or
+We may move this library to <https://github.com/prql/PyPrql> or
 <https://github.com/prql/prql>. We'd prefer to keep it as its own package given
 the hackery above, but there's no need for it to be its own repo.
 
