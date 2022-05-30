@@ -2,7 +2,9 @@
 
 dbt-prql allows writing PRQL in dbt models.
 
-Trivial Example:
+## Examples
+
+### Simple example
 
 ```elm
 {% prql %}
@@ -11,7 +13,7 @@ filter (age | in 20..30)
 {% endprql %}
 ```
 
-...compiles to:
+...would appear to dbt as:
 
 ```sql
 SELECT
@@ -23,7 +25,7 @@ WHERE
   AND 30
 ```
 
-More complex example:
+### Less simple example
 
 ```elm
 {% prql %}
@@ -36,7 +38,7 @@ group name (
 {% endprql %}
 ```
 
-...compiles to:
+...would appear to dbt as:
 
 ```sql
 SELECT
@@ -49,12 +51,18 @@ GROUP BY
   name
 ```
 
-## Functionality
+...and then dbt will compile the `source` and `ref`s to the full SQL query.
 
-- Any text between `{% prql %}` and `{% endprql %}` tags will be compiled from
-  PRQL to SQL.
-- Any text within the PRQL query that's surrounded by `{{...}}` will be passed
-  through to dbt parser without modification.
+## What it does
+
+While `dbt-prql` is installed, when dbt compiles models to SQL queries:
+
+- Any text in a dbt model between `{% prql %}` and `{% endprql %}` tags will be
+  compiled from PRQL to SQL.
+- In an effort to support this use-case, the PRQL complier passes through any
+  text in a PRQL query that's surrounded by `{{...}}`  without modification,
+  which allows us to pass Jinja expressions through to dbt.
+- dbt will then compile the resulting model to SQL, like it always does.
 
 ## Installation
 
@@ -94,3 +102,10 @@ If there's ever any concern that the library might be causing a problem, just
 set an environment variable `DBT_PRQL_DISABLE=1`, and this library won't
 monkeypatch anything. It's also fully uninstallable with `pip uninstall
 dbt-prql`.
+
+## Roadmap
+
+Open to ideas; at the moment it's fairly feature-complete. If dbt allowed for
+external plugins, we'd enthusiastically move to that. We'd also love to have
+this work on `.prql` files without the `{% prql %}` tags; with the current
+approach would require quite invasive monkeypatching.
