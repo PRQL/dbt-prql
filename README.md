@@ -1,7 +1,8 @@
 # dbt-prql
 
-dbt-prql allows writing PRQL in dbt models, magically compiling the PRQL to SQL,
-so dbt can work seamlessly.
+dbt-prql allows writing PRQL in dbt models. This combines the benefits of PRQL's
+power & simplicity _within_ queries, with dbt's version control, lineage &
+testing _across_ queries.
 
 ## Examples
 
@@ -54,16 +55,57 @@ GROUP BY
 
 ...and then dbt will compile the `source` and `ref`s to a full SQL query.
 
+### Replacing macros
+
+dbt's use of macros has saved many engineers many lines of code, and even saved
+some people some time. But imperatively programming text generation with
+instructions like  `if not loop.last` is not our
+highest calling, and the necessary rather than beautiful side of dbt.
+
+This is the canonical example of macros in the [dbt
+documentation](https://docs.getdbt.com/tutorial/learning-more/using-jinja):
+
+```sql
+{%- set payment_methods = ["bank_transfer", "credit_card", "gift_card"] -%}
+
+select
+order_id,
+{%- for payment_method in payment_methods %}
+sum(case when payment_method = '{{payment_method}}' then amount end) as {{payment_method}}_amount
+{%- if not loop.last %},{% endif -%}
+{% endfor %}
+from {{ ref('raw_payments') }}
+group by 1
+```
+
+Here's that as a PRQL query[^1], surrounded by prql jinja tags. No need for `if not loop.last`!
+
+```elm
+{% prql %}
+func filter_amount method -> s"sum(case when payment_method = {method} then amount end) as {method}_amount"
+
+from {{ ref('raw_payments') }}
+group order_id (
+  aggregate [
+    filter_amount bank_transfer,
+    filter_amount credit_card,
+    filter_amount gift_card,
+  ]
+)
+{% endprql %}
+```
+
 ## What it does
 
 When dbt compiles models to SQL queries:
 
 - Any text in a dbt model between `{% prql %}` and `{% endprql %}` tags is
-  compiled from PRQL to SQL.
-- The PRQL complier passes through any text in a PRQL query that's surrounded by
-  `{{...}}`  without modification, which allows us to pass Jinja expressions
-  through to dbt. (This was added to PRQL specifically for this use-case.)
-- dbt will then compile the resulting model to SQL.
+  compiled from PRQL to SQL before being passed to dbt.
+- The PRQL complier passes that's surrounded by `{{...}}` through to dbt without
+  modification, which allows us to embed jinja expressions in PRQL. (This was
+  added to PRQL specifically for this use-case.)
+- dbt will then compile the resulting model its final form, and dispatch it to
+  the database, as per usual.
 
 There's no config needed in the dbt project; this works automatically assuming
 `dbt-prql` is installed.
@@ -123,3 +165,32 @@ unconstrained in dbt functionality:
 We may move this code to <https://github.com/prql/PyPrql> or
 <https://github.com/prql/prql>. We'd prefer to keep it as its own package given
 the hackery above, but there's no need for it to be its own repo.
+
+[^1]: Note that when <https://github.com/prql/prql/issues/82> is implemented, we
+    could dispense with the function, and definitely dispense with the s-string.
+
+    ```elm
+    from {{ ref('raw_payments') }}
+    group order_id (
+      aggregate [
+        bank_transfer_amount = amount | filter payment_method == 'bank'        | sum,
+        credit_card_amount = amount   | filter payment_method == 'credit_card' | sum,
+        gift_amount = amount          | filter payment_method == 'gift_card'   | sum,
+      ]
+    )
+    ```
+
+    or
+
+    ```elm
+    func filter_amount method -> amount | filter payment_method == method | sum
+
+    from {{ ref('raw_payments') }}
+    group order_id (
+      aggregate [
+        bank_transfer_amount = filter_amount 'bank'
+        credit_card_amount   = filter_amount 'credit_card'
+        gift_amount          = filter_amount 'gift_card'
+      ]
+    )
+    ```
