@@ -1,6 +1,7 @@
 # dbt-prql
 
-dbt-prql allows writing PRQL in dbt models.
+dbt-prql allows writing PRQL in dbt models, magically compiling the PRQL to SQL
+so dbt can work seamlessly.
 
 ## Examples
 
