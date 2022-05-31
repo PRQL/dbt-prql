@@ -59,7 +59,7 @@ def patch_dbt_environment() -> None:
 
     def add_prql_extension(func):
         if getattr(func, "status", None) == "patched":
-            logger.debug(f"Already patched {func.__qualnam__}")
+            logger.debug(f"Already patched {func.__qualname__}")
             return func
 
         @functools.wraps(func)
@@ -69,7 +69,7 @@ def patch_dbt_environment() -> None:
             return env
 
         with_prql_extension.status = "patched"
-        logger.warning(f"Patched {func.__qualnam__}")
+        logger.info(f"Patched {func.__qualname__}")
 
         return with_prql_extension
 
