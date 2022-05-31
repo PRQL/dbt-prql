@@ -197,7 +197,8 @@ unconstrained in dbt functionality:
 
 - If dbt allowed for external plugins, we'd enthusiastically move to that.
 - We'd love to have this work on `.prql` files without the `{% prql %}` tags;
-  but with the current approach would require quite invasive monkeypatching.
+  but with the current approach that would require quite invasive
+  monkeypatching.
 - If we could add the dialect in automatically (i.e. `prql dialect:snowflake`),
   that would save a line per model.
 - If we could upstream this into dbt-core, that would be awesome. It may be on
