@@ -15,10 +15,10 @@ class PrqlExtension(Extension):
         ).set_lineno(line_number)
 
     def _to_sql(self, args, caller):
-        import pyprql
+        import prql_python
 
         prql = caller()
-        sql = pyprql.to_sql(prql)
+        sql = prql_python.to_sql(prql)
         output = f"""
 -- SQL created from PRQL. Original PRQL:
 {chr(10).join(f'-- {line}' for line in prql.splitlines())}

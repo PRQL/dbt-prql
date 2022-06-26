@@ -39,7 +39,7 @@ from {{ source('salesforce', 'in_process') }}
 derive expected_sales = probability * value
 join {{ ref('team', 'team_sales') }} [name]
 group name (
-    aggregate (expected_sales)
+  aggregate (expected_sales)
 )
 {% endprql %}
 ```
