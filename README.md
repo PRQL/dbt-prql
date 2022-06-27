@@ -35,7 +35,7 @@ WHERE
 
 ```elm
 {% prql %}
-from {{ source('salesforce', 'in_process') }}
+from in_process = {{ source('salesforce', 'in_process') }}
 derive expected_sales = probability * value
 join {{ ref('team', 'team_sales') }} [name]
 group name (
@@ -49,9 +49,9 @@ group name (
 ```sql
 SELECT
   name,
-  {{ source('salesforce', 'in_process') }}.probability * {{ source('salesforce', 'in_process') }}.value AS expected_sales
+  sum(in_process.probability * in_process.value) AS expected_sales
 FROM
-  {{ source('salesforce', 'in_process') }}
+  {{ source('salesforce', 'in_process') }} AS in_process
   JOIN {{ ref('team', 'team_sales') }} USING(name)
 GROUP BY
   name
