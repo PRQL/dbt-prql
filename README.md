@@ -159,9 +159,6 @@ pip install dbt-prql
 Currently this is new, but fairly feature-complete. It's enthusiastically
 supported — if there are any problems, please open an issue.
 
-Note that we need to release a new `pyprql` version for this plugin to pass
-jinja expressions through, which we'll do in the next couple of days.
-
 ## How does it work?
 
 It's some dark magic, unfortunately.
