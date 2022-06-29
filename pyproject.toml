@@ -10,7 +10,7 @@ repository = "https://github.com/prql/dbt-prql"
 version = "0.2.0"
 
 [tool.poetry.dependencies]
-dbt-core = "^1.1.0"
+dbt-core = "~1.1.0"
 prql_python = ">=0.2.0"
 python = ">=3.7"
 
