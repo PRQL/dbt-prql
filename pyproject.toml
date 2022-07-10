@@ -21,6 +21,5 @@ requires = ["poetry-core>=1.0.0"]
 [tool.isort]
 default_section = "THIRDPARTY"
 float_to_top = true
-known_first_party = ["pytest-accept"]
 profile = "black"
 skip_gitignore = true
