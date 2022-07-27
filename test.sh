@@ -8,5 +8,6 @@ cd ${test_dbt_project}
 pip install ../../dbt-prql
 dbt clean
 dbt deps
+dbt compile
 cd ~/workspace/dbt-prql/
 echo "🟢"
