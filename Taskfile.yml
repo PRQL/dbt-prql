@@ -1,0 +1,23 @@
+version: "3"
+
+tasks:
+  # There are a few problems with a standard test loop, such that we need to
+  # completely blow away the python environment on each loop:
+  # - Having the dbt-prql dependency as develop=True doesn't seem to copy
+  #   `zzz_dbt_prql.pth` with that name; instead using `dbt_prql.pth`. This then
+  #   doesn't load early enough. (Seems weird, might be worth confirming)
+  # - Having the dbt-prql dependency as develop=False doesn't seem to update
+  #   when reinstalled.
+  reset-test-env:
+    dir: tests
+
+    cmds:
+      - cmd: poetry env remove 3.9
+        ignore_error: true
+      - poetry env use 3.9
+      - poetry install
+
+  test:
+    dir: tests/dbt_test_project
+    cmds:
+      - dbt compile --profiles-dir=..

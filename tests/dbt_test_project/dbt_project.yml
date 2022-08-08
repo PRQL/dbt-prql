@@ -1,0 +1,5 @@
+name: "dbt_test_projct"
+config-version: 2
+# Unused
+version: "0.0.0"
+profile: prql-test

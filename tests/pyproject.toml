@@ -1,27 +1,27 @@
 [tool.poetry]
 authors = ["Maximilian Roos <m@maxroos.com>"]
-description = "Write PRQL in dbt models"
+description = "Test suite for dbt-prql"
 homepage = "https://github.com/prql/dbt-prql"
-include = ["zzz_dbt_prql.pth"]
 license = "Apache-2.0"
-name = "dbt-prql"
+name = "dbt-prql-test"
 readme = "README.md"
 repository = "https://github.com/prql/dbt-prql"
-version = "0.2.3"
+version = "0"
 
 [tool.poetry.dependencies]
 python = ">=3.7.3"
 
-# We're conservative on these because we're using internal APIs. 
-# We'll try and quite quickly on a new _.X._ release from dbt.
-# And we can unblock this when we have upstream tests https://github.com/prql/dbt-prql/issues/6
-dbt-core = ">=1.1.0,<1.3.0"
-prql_python = "0.2.6"
+# `develop=true` here means `zzz_dbt_prql.pth` isn't installed
+dbt-prql = {path = "..", develop = false}
 
 [tool.poetry.dev-dependencies]
+dbt-bigquery = ">=1.1.0,<1.3.0"
+dbt-postgres = ">=1.1.0,<1.3.0"
+
 black = "*"
 flake8 = "*"
 mypy = "*"
+pdbpp = "*"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

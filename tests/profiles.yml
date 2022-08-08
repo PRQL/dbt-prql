@@ -1,0 +1,17 @@
+prql-test:
+  target: prql-test-bigquery
+  outputs:
+    prql-test-bigquery:
+      type: bigquery
+      database: prql-test-db
+      schema: prql_test_schema
+      method: oauth
+
+    prql-test-postgres:
+      type: postgres
+      database: prql_test_db
+      schema: prql_test_schema
+      user: dbt_prql
+      host: none
+      port: 1234
+      password: password
