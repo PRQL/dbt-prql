@@ -1,0 +1,11 @@
+version: 2
+
+# Source template from https://docs.getdbt.com/docs/building-a-dbt-project/using-sources
+
+sources:
+  - name: salesforce
+    tables:
+      - name: in_process
+  - name: team
+    tables:
+      - name: team_sales

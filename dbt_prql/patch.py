@@ -1,23 +1,35 @@
 from jinja2.ext import Extension
+from jinja2.parser import Parser
 
 
 class PrqlExtension(Extension):
     tags = {"prql"}
 
-    def parse(self, parser):
+    def parse(self, parser: Parser):
+        import logging
+
         from jinja2 import nodes
         from jinja2.nodes import Const
 
+        logger = logging.getLogger(__name__)
+
         line_number = next(parser.stream).lineno
-        prql = parser.parse_statements(["name:endprql"], drop_needle=True)
+        prql_jinja = parser.parse_statements(["name:endprql"], drop_needle=True)
+        logger.info(f"Parsing statement:\n{prql_jinja}")
         return nodes.CallBlock(
-            self.call_method("_to_sql", [Const("")]), [], [], prql
+            self.call_method("_to_sql", [Const("")]), [], [], prql_jinja
         ).set_lineno(line_number)
 
     def _to_sql(self, args, caller):
+        _ = args
+        import logging
+
         import prql_python
 
+        logger = logging.getLogger(__name__)
+
         prql = caller()
+        logger.info(f"Parsing PRQL:\n{prql}")
         sql = prql_python.to_sql(prql)
         output = f"""
 -- SQL created from PRQL. Original PRQL:
@@ -25,6 +37,7 @@ class PrqlExtension(Extension):
 
 {sql}
 """
+        logger.info(f"Parsed into SQL:\n{sql}")
         return output
 
 
@@ -42,10 +55,10 @@ def patch_dbt_environment() -> None:
 
     logger = logging.getLogger(__name__)
 
-    log_level = os.environ.get("DBT_PRQL_LOG_LEVEL")
-    if log_level is not None and log_level != "":
+    log_level = os.environ.get("DBT_PRQL_LOG_LEVEL", "")
+    if log_level != "":
         logging.basicConfig()
-        logger.setLevel(int(log_level))
+        logger.setLevel(log_level)
         logger.warning(
             f"Setting PRQL log level to {log_level}. Please note that logging anything "
             "from this module can affect the reliability of some libraries which "
@@ -78,10 +91,10 @@ def patch_dbt_environment() -> None:
     jinja.get_environment = env_with_prql
 
     if os.environ.get("DBT_PRQL_TEST"):
-        test_prql_parse()
+        test_jinja_parse()
 
 
-def test_prql_parse() -> None:
+def test_jinja_parse() -> None:
     import logging
 
     from dbt.clients.jinja import get_environment
