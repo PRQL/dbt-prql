@@ -52,7 +52,6 @@ def patch_dbt_environment() -> None:
     import logging
 
     from dbt.clients import jinja
-    from jinja2 import environment
 
     logger = logging.getLogger(__name__)
 
@@ -78,22 +77,8 @@ def patch_dbt_environment() -> None:
 
         @functools.wraps(func)
         def with_prql_extension(*args, **kwargs):
-            env: environment.Environment = func(*args, **kwargs)
-            # We want to make sure we go first, since dbt will parse the table name for
-            # postgres in a format that PRQL can't understand; e.g.
-            #
-            #   "prql_test_db"."prql_test_schema"."test_model_1"
-            #
-            # ...and we don't want to ask users to do something like surround their refs
-            # & sources with backticks.
-            #
-            # If we just wanted to add this onto the end, we'd use
-            # `env.add_extension(PrqlExtension)`. The `.load_extensions` is from that
-            # method.
-            env.extensions = {
-                **environment.load_extensions(env, [PrqlExtension]),
-                **env.extensions,
-            }
+            env = func(*args, **kwargs)
+            env.add_extension(PrqlExtension)
             return env
 
         with_prql_extension.status = "patched"
