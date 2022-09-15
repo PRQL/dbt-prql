@@ -8,6 +8,10 @@ Once `dbt-prql` in installed, dbt commands compile PRQL between `{% prql %}` &
 `{% endprql %}` jinja tags to SQL as part of dbt's compilation. No additional
 config is required.
 
+Currently dbt-prql only works with dialects which use backticks, like BigQuery.
+We recognize this is a huge limitation, and are actively working on more closely
+integrating PRQL more closely with dbt.
+
 ## Examples
 
 ### Simple example
