@@ -1,8 +1,8 @@
 # dbt-prql
 
-dbt-prql allows writing PRQL in dbt models. This combines the benefits of PRQL's
-power & simplicity _within_ queries, with dbt's version control, lineage &
-testing _across_ queries.
+dbt-prql allows writing PRQL in [dbt](https://www.getdbt.com/) models. This
+combines the benefits of PRQL's power & simplicity _within_ queries, with dbt's
+version control, lineage & testing _across_ queries.
 
 Once `dbt-prql` in installed, dbt commands compile PRQL between `{% prql %}` &
 `{% endprql %}` jinja tags to SQL as part of dbt's compilation. No additional
