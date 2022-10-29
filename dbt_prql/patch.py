@@ -51,9 +51,13 @@ def patch_dbt_environment() -> None:
     import functools
     import logging
 
-    from dbt.clients import jinja
-
     logger = logging.getLogger(__name__)
+
+    try:
+        from dbt.clients import jinja
+    except ImportError:
+        # Don't log this as discussed below
+        pass
 
     log_level = os.environ.get("DBT_PRQL_LOG_LEVEL", "")
     if log_level != "":
