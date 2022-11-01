@@ -10,7 +10,8 @@ config is required.
 
 Currently dbt-prql only works with dialects which use backticks, like BigQuery.
 We recognize this is a huge limitation, and are actively working on more closely
-integrating PRQL more closely with dbt.
+integrating PRQL more closely with dbt. If you're interested in this, subscribe
+/ upvote <https://github.com/dbt-labs/dbt-core/pull/5982>.
 
 ## Examples
 
