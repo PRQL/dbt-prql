@@ -1,5 +1,17 @@
 # dbt-prql
 
+```warning
+As of Feb 2022, we're again considering how to best integrate with dbt
+more closely. Ideally a file with a `.prql`
+extension will just work™.
+
+If you're interested in this, subscribe or 👍 to
+<https://github.com/dbt-labs/dbt-core/pull/5982>.
+
+The original plugin is hosted here, but only works
+with a minority of dialects, and isn't a focus of development at the moment.
+```
+
 dbt-prql allows writing PRQL in [dbt](https://www.getdbt.com/) models. This
 combines the benefits of PRQL's power & simplicity _within_ queries, with dbt's
 version control, lineage & testing _across_ queries.
@@ -7,12 +19,6 @@ version control, lineage & testing _across_ queries.
 Once `dbt-prql` in installed, dbt commands compile PRQL between `{% prql %}` &
 `{% endprql %}` jinja tags to SQL as part of dbt's compilation. No additional
 config is required.
-
-Currently dbt-prql only works with dialects which use backticks, like BigQuery.
-We recognize this is a huge limitation, and are actively working on more closely
-integrating PRQL more closely with dbt, such that a file with a `.prql`
-extension will just work™. If you're interested in this, subscribe or 👍
-<https://github.com/dbt-labs/dbt-core/pull/5982>.
 
 ## Examples
 
@@ -110,7 +116,8 @@ live feedback around any errors, on every keystroke. Though there's much more to
 come, check out the current version on [PRQL
 Playground](https://prql-lang.org/playground/).
 
-[^1]: Note that when <https://github.com/prql/prql/issues/82> is implemented, we
+[^1]:
+    Note that when <https://github.com/prql/prql/issues/82> is implemented, we
     can dispense with the s-string, and optionally dispense with the function.
 
     ```elm
@@ -174,9 +181,10 @@ dbt doesn't allow adding behavior beyond the database adapters (e.g.
 the python import system to monkeypatch dbt's jinja environment with an
 additional jinja extension on python's startup[^2].
 
-[^2]: Thanks to
-[mtkennerly/poetry-dynamic-versioning](https://github.com/mtkennerly/poetry-dynamic-versioning)
-for the technique.
+[^2]:
+    Thanks to
+    [mtkennerly/poetry-dynamic-versioning](https://github.com/mtkennerly/poetry-dynamic-versioning)
+    for the technique.
 
 This approach was discussed with the dbt team
 [here](https://github.com/prql/prql/issues/375) and
