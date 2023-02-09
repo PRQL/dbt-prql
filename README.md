@@ -1,16 +1,15 @@
 # dbt-prql
 
-```warning
-As of Feb 2022, we're again considering how to best integrate with dbt
-more closely. Ideally a file with a `.prql`
-extension will just work™.
-
-If you're interested in this, subscribe or 👍 to
-<https://github.com/dbt-labs/dbt-core/pull/5982>.
-
-The original plugin is hosted here, but only works
-with a minority of dialects, and isn't a focus of development at the moment.
-```
+> **Note**
+> As of Feb 2022, we're again considering how to best integrate with dbt
+> more closely. Ideally a file with a `.prql`
+> extension will just work™.
+>
+> If you're interested in this, subscribe or 👍 to
+> <https://github.com/dbt-labs/dbt-core/pull/5982>.
+>
+> The original plugin is hosted here, but only works
+> with a minority of dialects, and isn't a focus of development at the moment.
 
 dbt-prql allows writing PRQL in [dbt](https://www.getdbt.com/) models. This
 combines the benefits of PRQL's power & simplicity _within_ queries, with dbt's
