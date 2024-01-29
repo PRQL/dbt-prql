@@ -28,7 +28,7 @@ repos:
         args: ["--py37-plus"]
   # black should go at the end, since it's the most likely to change others' changes.
   - repo: https://github.com/psf/black
-    rev: "23.12.1"
+    rev: "24.1.1"
     hooks:
       - id: black
   # This doesn't seem to work from pre-commit.ci; which may not have internet access
