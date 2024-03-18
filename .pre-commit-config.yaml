@@ -1,7 +1,7 @@
 # @max-sixty's standard set
 repos:
   - repo: https://github.com/PyCQA/autoflake
-    rev: "v2.3.0"
+    rev: "v2.3.1"
     hooks:
       - id: autoflake
   - repo: https://github.com/PyCQA/isort
@@ -28,7 +28,7 @@ repos:
         args: ["--py37-plus"]
   # black should go at the end, since it's the most likely to change others' changes.
   - repo: https://github.com/psf/black
-    rev: "24.2.0"
+    rev: "24.3.0"
     hooks:
       - id: black
   # This doesn't seem to work from pre-commit.ci; which may not have internet access
