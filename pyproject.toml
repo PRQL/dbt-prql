@@ -7,7 +7,7 @@ license = "Apache-2.0"
 name = "dbt-prql"
 readme = "README.md"
 repository = "https://github.com/prql/dbt-prql"
-version = "0.2.3"
+version = "0.5.0"
 
 [tool.poetry.dependencies]
 python = ">=3.7.3"
@@ -15,8 +15,8 @@ python = ">=3.7.3"
 # We're conservative on these because we're using internal APIs.
 # We'll try and quite quickly on a new _.X._ release from dbt.
 # And we can unblock this when we have upstream tests https://github.com/prql/dbt-prql/issues/6
-dbt-core = ">=1.1.0,<1.3.0"
-prql_python = "0.2.6"
+dbt-core = ">=1.1.0,<1.4.0"
+prql_python = "^0.5"
 
 [tool.poetry.dev-dependencies]
 black = "*"
