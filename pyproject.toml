@@ -2,21 +2,22 @@
 authors = ["Maximilian Roos <m@maxroos.com>"]
 description = "Write PRQL in dbt models"
 homepage = "https://github.com/prql/dbt-prql"
-include = ["zzz_dbt_prql.pth"]
+include = [{path = "zzz_dbt_prql.pth", format = ["sdist", "wheel"]}]
 license = "Apache-2.0"
 name = "dbt-prql"
 readme = "README.md"
 repository = "https://github.com/prql/dbt-prql"
-version = "0.2.3"
+version = "0.2.4"
 
 [tool.poetry.dependencies]
-python = ">=3.7.3"
+python = ">=3.8,<4.0"
 
 # We're conservative on these because we're using internal APIs.
 # We'll try and quite quickly on a new _.X._ release from dbt.
 # And we can unblock this when we have upstream tests https://github.com/prql/dbt-prql/issues/6
-dbt-core = ">=1.1.0,<1.3.0"
-prql_python = "0.2.6"
+dbt-core = ">=1.8.0,<=1.9.4"
+dbt-common = ">=1.10.0,<1.22.0"
+prql_python = "0.11.2"
 
 [tool.poetry.dev-dependencies]
 black = "*"
