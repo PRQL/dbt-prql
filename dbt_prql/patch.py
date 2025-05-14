@@ -30,7 +30,7 @@ class PrqlExtension(Extension):
 
         prql = caller()
         logger.info(f"Parsing PRQL:\n{prql}")
-        sql = prql_python.to_sql(prql)
+        sql = prql_python.compile(prql)
         output = f"""
 -- SQL created from PRQL. Original PRQL:
 {chr(10).join(f'-- {line}' for line in prql.splitlines())}
@@ -54,7 +54,7 @@ def patch_dbt_environment() -> None:
     logger = logging.getLogger(__name__)
 
     try:
-        from dbt.clients import jinja
+        from dbt_common.clients import jinja
     except ImportError:
         # Don't log this as discussed below
         pass
