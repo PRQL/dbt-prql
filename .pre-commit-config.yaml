@@ -18,17 +18,17 @@ repos:
     hooks:
       - id: mypy
   - repo: https://github.com/keewis/blackdoc
-    rev: v0.4.4
+    rev: v0.4.5
     hooks:
       - id: blackdoc
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.0
+    rev: v3.21.1
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
   # black should go at the end, since it's the most likely to change others' changes.
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: "25.9.0"
+    rev: "25.11.0"
     hooks:
       - id: black
   # This doesn't seem to work from pre-commit.ci; which may not have internet access
