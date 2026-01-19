@@ -105,12 +105,10 @@ def test_jinja_parse() -> None:
 
     logger = logging.getLogger(__name__)
 
-    template = get_environment().from_string(
-        """
+    template = get_environment().from_string("""
     {% prql %}
     from employees
     filter (age | in 5..10)
     {% endprql %}
-    """
-    )
+    """)
     logger.info(f"Tested PRQL parsing: {template.render()}")
